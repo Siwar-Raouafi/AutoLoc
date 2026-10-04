@@ -5,7 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "vehicule")
 @Getter
@@ -13,22 +18,54 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Vehicule {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long idVehicule;
-@Column(nullable = false, unique = true, length = 20)
-private String immatriculation;
-@Column(nullable = false, length = 50)
-private String marque;
-@Column(nullable = false, length = 50)
-private String modele;
-@Enumerated(EnumType.STRING)
-@Column(nullable = false, length = 20)
-private CategorieVehicule categorie;
-@Column(nullable = false, precision = 10, scale = 2)
-private BigDecimal tarifJournalier;
-@Enumerated(EnumType.STRING)
-@Column(nullable = false, length = 20)
-private StatutVehicule statut;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idVehicule;
+
+    @Column(nullable = false, unique = true, length = 20)
+    private String immatriculation;
+
+    @Column(nullable = false, length = 50)
+    private String marque;
+
+    @Column(nullable = false, length = 50)
+    private String modele;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private CategorieVehicule categorie;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal tarifJournalier;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatutVehicule statut;
+
+    // N Vehicule -> 1 Agence
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_agence", nullable = false)
+    private Agence agence;
+
+    // N Vehicule <-> N Equipement (côté propriétaire)
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "vehicule_equipement",
+            joinColumns = @JoinColumn(name = "id_vehicule"),
+            inverseJoinColumns = @JoinColumn(name = "id_equipement")
+    )
+    private List<Equipement> equipements = new ArrayList<>();
+
+    // 1 Vehicule -> N Maintenance
+    @ToString.Exclude
+    @OneToMany(mappedBy = "vehicule", fetch = FetchType.LAZY)
+    private List<Maintenance> maintenances = new ArrayList<>();
+
+    // 1 Vehicule -> N Reservation
+    @ToString.Exclude
+    @OneToMany(mappedBy = "vehicule", fetch = FetchType.LAZY)
+    private List<Reservation> reservations = new ArrayList<>();
 }

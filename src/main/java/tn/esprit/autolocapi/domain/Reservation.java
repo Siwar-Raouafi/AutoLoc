@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -29,4 +30,21 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutReservation statut;
+
+    // N Reservation -> 1 Client
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_client", nullable = false)
+    private Client client;
+
+    // N Reservation -> 1 Vehicule
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vehicule", nullable = false)
+    private Vehicule vehicule;
+
+    // 1 Reservation -> 1 Contrat (côté inverse)
+    @ToString.Exclude
+    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    private Contrat contrat;
 }

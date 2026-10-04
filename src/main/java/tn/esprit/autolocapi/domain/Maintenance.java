@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -28,4 +29,10 @@ public class Maintenance {
 
     @Column(nullable = false, length = 255)
     private String description;
+
+    // N Maintenance -> 1 Vehicule
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_vehicule", nullable = false)
+    private Vehicule vehicule;
 }

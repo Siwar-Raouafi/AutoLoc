@@ -1,5 +1,6 @@
-package tn.esprit.autolocapi.domain;
+package tn.esprit.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,9 @@ public class Equipement {
     @Column(nullable = false, length = 50)
     private String libelle;
 
+
     // N Equipement <-> N Vehicule (côté inverse)
+    @JsonIgnore
     @ToString.Exclude
     @ManyToMany(mappedBy = "equipements", fetch = FetchType.LAZY)
     private List<Vehicule> vehicules = new ArrayList<>();

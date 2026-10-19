@@ -1,4 +1,4 @@
-package tn.esprit.autolocapi.domain;
+package tn.esprit.autoloc.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +35,13 @@ public class Agence {
     private String telephone;
 
     // 1 Agence -> N Vehicule
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
     private List<Vehicule> vehicules = new ArrayList<>();
 
     // 1 Agence -> N Employe
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
     private List<Employe> employes = new ArrayList<>();

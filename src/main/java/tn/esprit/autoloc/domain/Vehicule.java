@@ -1,4 +1,4 @@
-package tn.esprit.autolocapi.domain;
+package tn.esprit.autoloc.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class Vehicule {
     private StatutVehicule statut;
 
     // N Vehicule -> 1 Agence
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_agence", nullable = false)
@@ -60,11 +62,13 @@ public class Vehicule {
     private List<Equipement> equipements = new ArrayList<>();
 
     // 1 Vehicule -> N Maintenance
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "vehicule", fetch = FetchType.LAZY)
     private List<Maintenance> maintenances = new ArrayList<>();
 
     // 1 Vehicule -> N Reservation
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "vehicule", fetch = FetchType.LAZY)
     private List<Reservation> reservations = new ArrayList<>();

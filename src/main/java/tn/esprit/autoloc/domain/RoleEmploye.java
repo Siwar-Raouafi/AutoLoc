@@ -1,4 +1,4 @@
-package tn.esprit.autolocapi.domain;
+package tn.esprit.autoloc.domain;
 
 public enum RoleEmploye {
     AGENT, MANAGER

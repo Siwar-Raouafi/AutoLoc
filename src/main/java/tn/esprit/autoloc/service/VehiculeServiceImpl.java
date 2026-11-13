@@ -14,16 +14,21 @@ import java.util.List;
 public class VehiculeServiceImpl implements IVehiculeService {
 
     private final IVehiculeRepository vehiculeRepository;
+    private final VehiculeValidator vehiculeValidator;
+    private final JournalisationService journalisationService;
 
     @Override
     @Transactional
     public Vehicule ajouterVehicule(Vehicule vehicule) {
+        vehiculeValidator.valider(vehicule);
+        journalisationService.journaliser("Ajout du véhicule : " + vehicule.getImmatriculation());
         return vehiculeRepository.save(vehicule);
     }
 
     @Override
     @Transactional
     public Vehicule modifierVehicule(Long idVehicule, Vehicule vehicule) {
+        vehiculeValidator.valider(vehicule);
         Vehicule existant = recupererVehicule(idVehicule);
         existant.setImmatriculation(vehicule.getImmatriculation());
         existant.setMarque(vehicule.getMarque());
@@ -31,6 +36,10 @@ public class VehiculeServiceImpl implements IVehiculeService {
         existant.setCategorie(vehicule.getCategorie());
         existant.setTarifJournalier(vehicule.getTarifJournalier());
         existant.setStatut(vehicule.getStatut());
+        if (vehicule.getAgence() != null) {
+            existant.setAgence(vehicule.getAgence());
+        }
+        journalisationService.journaliser("Modification du véhicule id=" + idVehicule);
         return vehiculeRepository.save(existant);
     }
 
@@ -50,6 +59,8 @@ public class VehiculeServiceImpl implements IVehiculeService {
     @Override
     @Transactional
     public void supprimerVehicule(Long idVehicule) {
+        recupererVehicule(idVehicule);
+        journalisationService.journaliser("Suppression du véhicule id=" + idVehicule);
         vehiculeRepository.deleteById(idVehicule);
     }
 }
